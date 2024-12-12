@@ -4,10 +4,13 @@ void	read_loop(char *buffer, char **line, int fd)
 {
 	int		bytesRead;
 	char	*nl_char;
+	size_t	len;
+
 	while (1)
 	{
 		nl_char = ft_strchr(buffer, '\n');
-		*line = ft_join(line, buffer, nl_char);
+		len = calc_line_len(*line, buffer, nl_char);
+		*line = ft_join(line, buffer, len);
 		if (nl_char)
 		{
 			ft_strcpy(buffer, nl_char + 1);
@@ -39,7 +42,6 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-/*
 #include <fcntl.h>
 #include <stdio.h>
 int	main(void)
@@ -48,7 +50,7 @@ int	main(void)
 	int		i;
 	char	*res;
 
-	fd = open("empty.txt", O_RDONLY);
+	fd = open("test.txt", O_RDONLY);
 	if (fd <= -1)
 	{
 		printf("Error opening file!\n");
@@ -59,16 +61,13 @@ int	main(void)
 	while (i < 50)
 	{
 		res = get_next_line(fd);
-		if (!*res)
-		{
-			printf("returned NULL!\n");
-			break;
-		}
+		if (!res)
+			break ;
 		printf("%s", res);
+		sleep(1);
 		free(res);
 		i++;
 	}
 
 	return (0);
 }
-*/

@@ -1,6 +1,6 @@
 #include "get_next_line.h"
 
-size_t	weird_strlen(const char *s)
+size_t	strlen_safe(const char *s)
 {
 	size_t	i;
 
@@ -40,18 +40,25 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_join(char **line, char *buffer, char *nl_char)
+size_t	calc_line_len(char *line, char *buffer, char *nl_char)
+{
+	size_t	len;
+
+	len = strlen_safe(line);
+	if (nl_char)
+		len += nl_char - buffer + 1;
+	else
+		len += strlen_safe(buffer);
+	return (len);
+
+}
+
+char	*ft_join(char **line, char *buffer, size_t len)
 {
 	char	*start;
 	char	*new;	
 	char	*temp;
-	size_t	len;
 
-	len = weird_strlen(*line);
-	if (nl_char)
-		len += nl_char - buffer + 1;
-	else
-		len += weird_strlen(buffer);
 	new = (char *)malloc(sizeof(char) * (len + 1));
 	if (!new)
 		return (NULL);
