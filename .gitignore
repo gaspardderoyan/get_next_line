@@ -6,3 +6,9 @@
 
 # Executables
 *.out
+
+# Whatever
+*.gch
+
+#folders
+*/
