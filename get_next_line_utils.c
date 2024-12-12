@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gderoyqn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/12 17:38:54 by gderoyqn          #+#    #+#             */
+/*   Updated: 2024/12/12 17:38:56 by gderoyqn         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 size_t	strlen_safe(const char *s)
@@ -40,52 +52,44 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-size_t	calc_line_len(char *line, char *buffer, char *nl_char)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	size_t	len;
+	void	*ptr;
+	size_t	i;
 
-	len = strlen_safe(line);
-	if (nl_char)
-		len += nl_char - buffer + 1;
-	else
-		len += strlen_safe(buffer);
-	return (len);
-
-}
-
-char	*ft_join(char **line, char *buffer, size_t len)
-{
-	char	*start;
-	char	*new;	
-	char	*temp;
-
-	new = (char *)malloc(sizeof(char) * (len + 1));
-	if (!new)
+	if (!dest && !src)
 		return (NULL);
-	start = new;
-	if (*line)
+	i = 0;
+	ptr = dest;
+	while (i < n)
 	{
-		temp = *line;
-		while (*temp)
-		{
-			*new = *temp;
-			new++;
-			temp++;
-		}
+		*(char *)dest = *(char *)src;
+		dest++;
+		src++;
+		i++;
 	}
-	while (*buffer)
-	{
-		*new = *buffer;
-		if (*new == '\n')
-		{
-			new++;
-			break ;
-		}
-		new++;
-		buffer++;
-	}
-	*new = '\0';
-	free(*line);
-	return (start);
+	return (ptr);
 }
 
+char	*join_lnb(char **line, char *buffer, char *nl_char)
+{
+	size_t	line_len;
+	size_t	buf_len;
+	char	*new_line;
+
+	line_len = strlen_safe(*line);
+	if (nl_char)
+		buf_len = (size_t)(nl_char - buffer + 1);
+	else
+		buf_len = strlen_safe(buffer);
+	new_line = (char *)malloc(sizeof(char) * (line_len + buf_len + 1));
+	if (!new_line)
+		return (NULL);
+	if (*line)
+		ft_memcpy(new_line, *line, line_len);
+	ft_memcpy(new_line + line_len, buffer, buf_len);
+	new_line[line_len + buf_len] = '\0';
+	free(*line);
+	*line = NULL;
+	return (new_line);
+}

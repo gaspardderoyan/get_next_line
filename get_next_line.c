@@ -1,26 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gderoyqn <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/12 17:36:49 by gderoyqn          #+#    #+#             */
+/*   Updated: 2024/12/12 17:37:35 by gderoyqn         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 void	read_loop(char *buffer, char **line, int fd)
 {
-	int		bytesRead;
+	int		bytes_read;
 	char	*nl_char;
-	size_t	len;
 
 	while (1)
 	{
 		nl_char = ft_strchr(buffer, '\n');
-		len = calc_line_len(*line, buffer, nl_char);
-		*line = ft_join(line, buffer, len);
+		*line = join_lnb(line, buffer, nl_char);
 		if (nl_char)
 		{
 			ft_strcpy(buffer, nl_char + 1);
 			break ;
 		}
 		buffer[0] = '\0';
-		bytesRead = read(fd, buffer, BUFFER_SIZE);
-		if (bytesRead >= 0)
-			buffer[bytesRead] = 0;
-		if (bytesRead <= 0)
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read >= 0)
+			buffer[bytes_read] = 0;
+		if (bytes_read <= 0)
 			break ;
 	}
 }
@@ -42,6 +52,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+/*
 #include <fcntl.h>
 #include <stdio.h>
 int	main(void)
@@ -71,3 +82,4 @@ int	main(void)
 
 	return (0);
 }
+*/
