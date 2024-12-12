@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gderoyqn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:36:49 by gderoyqn          #+#    #+#             */
-/*   Updated: 2024/12/12 18:01:08 by gderoyqn         ###   ########.fr       */
+/*   Updated: 2024/12/12 18:15:12 by gderoyqn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	read_loop(char *buffer, char **line, int fd)
 {
@@ -37,13 +37,13 @@ void	read_loop(char *buffer, char **line, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	buffer[BUFFER_SIZE + 1];
+	static char	buffer[1024][BUFFER_SIZE + 1];
 	char		*line;
 
 	if (fd < 0 || fd >= 1024)
 		return (NULL);
 	line = NULL;
-	read_loop(buffer, &line, fd);
+	read_loop(buffer[fd], &line, fd);
 	if (!*line)
 	{
 		free(line);
@@ -58,10 +58,12 @@ char	*get_next_line(int fd)
 int	main(void)
 {
 	int		fd;
+	int		fd2;
 	int		i;
-	char	*res;
 
 	fd = open("test.txt", O_RDONLY);
+	fd2 = open("test2.txt", O_RDONLY);
+
 	if (fd <= -1)
 	{
 		printf("Error opening file!\n");
@@ -69,14 +71,11 @@ int	main(void)
 	}
 
 	i = 0;
-	while (i < 50)
+	while (i < 5)
 	{
-		res = get_next_line(fd);
-		if (!res)
-			break ;
-		printf("%s", res);
-		sleep(1);
-		free(res);
+		printf("1: %s", get_next_line(fd));
+		printf("2: %s", get_next_line(fd2));
+		printf("\n");
 		i++;
 	}
 
