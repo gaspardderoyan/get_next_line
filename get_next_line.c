@@ -2,7 +2,7 @@
 
 void	read_loop(char *buffer, char **line, int fd)
 {
-	int	bytesRead;
+	int		bytesRead;
 	char	*nl_char;
 	while (1)
 	{
@@ -31,6 +31,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = NULL;
 	read_loop(buffer, &line, fd);
+	if (!*line)
+	{
+		free(line);
+		return (NULL);
+	}
 	return (line);
 }
 
@@ -43,7 +48,7 @@ int	main(void)
 	int		i;
 	char	*res;
 
-	fd = open("test.txt", O_RDONLY);
+	fd = open("empty.txt", O_RDONLY);
 	if (fd <= -1)
 	{
 		printf("Error opening file!\n");
@@ -54,6 +59,11 @@ int	main(void)
 	while (i < 50)
 	{
 		res = get_next_line(fd);
+		if (!*res)
+		{
+			printf("returned NULL!\n");
+			break;
+		}
 		printf("%s", res);
 		free(res);
 		i++;
