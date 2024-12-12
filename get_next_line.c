@@ -1,5 +1,4 @@
 #include "get_next_line.h"
-#define BUFFER_SIZE 42
 
 void	read_loop(char *buffer, char **line, int fd)
 {
@@ -28,11 +27,14 @@ char	*get_next_line(int fd)
 	static char	buffer[BUFFER_SIZE + 1];
 	char		*line;
 
+	if (fd < 0 || fd >= 1024)
+		return (NULL);
 	line = NULL;
 	read_loop(buffer, &line, fd);
 	return (line);
 }
 
+/*
 #include <fcntl.h>
 #include <stdio.h>
 int	main(void)
@@ -59,3 +61,4 @@ int	main(void)
 
 	return (0);
 }
+*/
