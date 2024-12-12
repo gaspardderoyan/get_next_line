@@ -40,14 +40,14 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_join(char *line, char *buffer, char *nl_char)
+char	*ft_join(char **line, char *buffer, char *nl_char)
 {
 	char	*start;
 	char	*new;	
 	char	*temp;
 	size_t	len;
 
-	len = weird_strlen(line);
+	len = weird_strlen(*line);
 	if (nl_char)
 		len += nl_char - buffer + 1;
 	else
@@ -56,14 +56,14 @@ char	*ft_join(char *line, char *buffer, char *nl_char)
 	if (!new)
 		return (NULL);
 	start = new;
-	if (line)
+	if (*line)
 	{
-		temp = line;
-		while (*line)
+		temp = *line;
+		while (*temp)
 		{
-			*new = *line;
+			*new = *temp;
 			new++;
-			line++;
+			temp++;
 		}
 	}
 	while (*buffer)
@@ -78,8 +78,7 @@ char	*ft_join(char *line, char *buffer, char *nl_char)
 		buffer++;
 	}
 	*new = '\0';
-	/* if (*temp) */
-	/* 	free(temp); */
+	free(*line);
 	return (start);
 }
 

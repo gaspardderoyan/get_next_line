@@ -1,17 +1,14 @@
 #include "get_next_line.h"
 #define BUFFER_SIZE 42
 
-void	check_buffer(char *buffer, char **line);
-
 void	read_loop(char *buffer, char **line, int fd)
 {
 	int	bytesRead;
 	char	*nl_char;
-	// find the \0 in 'line'	
 	while (1)
 	{
 		nl_char = ft_strchr(buffer, '\n');
-		*line = ft_join(*line, buffer, nl_char);
+		*line = ft_join(line, buffer, nl_char);
 		if (nl_char)
 		{
 			ft_strcpy(buffer, nl_char + 1);
@@ -33,14 +30,6 @@ char	*get_next_line(int fd)
 
 	line = NULL;
 	read_loop(buffer, &line, fd);
-	/*
-	 * check BUFFER for \n 	 
-	 * if YES
-		 * it should add everything until after \n to 'line'
-		 * and the rest to buffer
-	 * if NO
-		 * runs the normal loop to keep reading into the buffer until \n
-	 */
 	return (line);
 }
 
@@ -49,6 +38,8 @@ char	*get_next_line(int fd)
 int	main(void)
 {
 	int		fd;
+	int		i;
+	char	*res;
 
 	fd = open("test.txt", O_RDONLY);
 	if (fd <= -1)
@@ -57,10 +48,14 @@ int	main(void)
 		return (1);
 	}
 
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
-	printf("%s", get_next_line(fd));
+	i = 0;
+	while (i < 50)
+	{
+		res = get_next_line(fd);
+		printf("%s", res);
+		free(res);
+		i++;
+	}
 
 	return (0);
 }
