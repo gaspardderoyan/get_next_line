@@ -6,7 +6,7 @@
 /*   By: gderoyqn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:36:49 by gderoyqn          #+#    #+#             */
-/*   Updated: 2024/12/12 18:15:12 by gderoyqn         ###   ########.fr       */
+/*   Updated: 2024/12/14 16:16:47 by gderoyqn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*get_next_line(int fd)
 	static char	buffer[1024][BUFFER_SIZE + 1];
 	char		*line;
 
-	if (fd < 0 || fd >= 1024)
+	if (fd < 0 || fd >= 1024 || BUFFER_SIZE < 1)
 		return (NULL);
 	line = NULL;
 	read_loop(buffer[fd], &line, fd);
