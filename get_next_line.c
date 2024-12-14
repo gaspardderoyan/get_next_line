@@ -40,7 +40,7 @@ char	*get_next_line(int fd)
 	static char	buffer[BUFFER_SIZE + 1];
 	char		*line;
 
-	if (fd < 0 || fd >= 1024)
+	if (fd < 0 || fd >= 1024 || BUFFER_SIZE < 1)
 		return (NULL);
 	line = NULL;
 	read_loop(buffer, &line, fd);
@@ -75,7 +75,6 @@ int	main(void)
 		if (!res)
 			break ;
 		printf("%s", res);
-		sleep(1);
 		free(res);
 		i++;
 	}
