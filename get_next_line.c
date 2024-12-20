@@ -6,7 +6,7 @@
 /*   By: gderoyqn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:36:49 by gderoyqn          #+#    #+#             */
-/*   Updated: 2024/12/12 18:01:08 by gderoyqn         ###   ########.fr       */
+/*   Updated: 2024/12/14 16:21:15 by gderoyqn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,15 @@ void	read_loop(char *buffer, char **line, int fd)
 		}
 		buffer[0] = '\0';
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read >= 0)
+		if (bytes_read > 0)
 			buffer[bytes_read] = 0;
-		if (bytes_read <= 0)
+		else if (bytes_read == 0)
 			break ;
+		else
+		{
+			buffer[0] = 0;
+			break;
+		}
 	}
 }
 

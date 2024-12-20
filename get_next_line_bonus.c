@@ -28,10 +28,15 @@ void	read_loop(char *buffer, char **line, int fd)
 		}
 		buffer[0] = '\0';
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read >= 0)
+		if (bytes_read > 0)
 			buffer[bytes_read] = 0;
-		if (bytes_read <= 0)
+		else if (bytes_read == 0)
 			break ;
+		else
+		{
+			buffer[0] = 0;
+			break;
+		}
 	}
 }
 
