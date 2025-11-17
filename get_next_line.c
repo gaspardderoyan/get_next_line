@@ -6,13 +6,24 @@
 /*   By: gderoyqn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:36:49 by gderoyqn          #+#    #+#             */
-/*   Updated: 2024/12/14 16:21:15 by gderoyqn         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:56:29 by gderoyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	read_loop(char *buffer, char **line, int fd)
+static int	handle_read(char *buffer, int fd)
+{
+	int	bytes_read;
+
+	buffer[0] = '\0';
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read > 0)
+		buffer[bytes_read] = 0;
+	return (bytes_read);
+}
+
+static void	read_loop(char *buffer, char **line, int fd)
 {
 	int		bytes_read;
 	char	*nl_char;
@@ -22,20 +33,21 @@ void	read_loop(char *buffer, char **line, int fd)
 		nl_char = ft_strchr(buffer, '\n');
 		*line = join_lnb(line, buffer, nl_char);
 		if (nl_char)
-		{
 			ft_strcpy(buffer, nl_char + 1);
+		if (nl_char)
 			break ;
-		}
-		buffer[0] = '\0';
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read > 0)
-			buffer[bytes_read] = 0;
-		else if (bytes_read == 0)
+		bytes_read = handle_read(buffer, fd);
+		if (bytes_read == 0)
 			break ;
-		else
+		else if (bytes_read < 0)
 		{
+			if (*line)
+			{
+				free(*line);
+				*line = NULL;
+			}
 			buffer[0] = 0;
-			break;
+			return ;
 		}
 	}
 }
@@ -49,7 +61,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = NULL;
 	read_loop(buffer, &line, fd);
-	if (!*line)
+	if (!line || !*line)
 	{
 		free(line);
 		return (NULL);
