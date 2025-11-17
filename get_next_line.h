@@ -6,7 +6,7 @@
 /*   By: gderoyqn <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 17:37:53 by gderoyqn          #+#    #+#             */
-/*   Updated: 2024/12/12 17:38:36 by gderoyqn         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:54:01 by gderoyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <string.h>
-
-# ifndef BUFFER_SIZE 
+# ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
 
