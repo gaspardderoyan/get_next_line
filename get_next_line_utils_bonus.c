@@ -71,6 +71,9 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (ptr);
 }
 
+/* joins line & buffer into new string, frees old line
+ * if nl_char exists, only copies up to & including newline
+ * otherwise copies entire buffer content */
 char	*join_lnb(char **line, char *buffer, char *nl_char)
 {
 	size_t	line_len;

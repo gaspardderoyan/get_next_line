@@ -12,6 +12,35 @@
 
 #include "get_next_line.h"
 
+/* frees line & resets buffer when malloc fails or read errors */
+static void	cleanup_line(char **line, char *buffer)
+{
+	if (*line)
+		free(*line);
+	*line = NULL;
+	buffer[0] = 0;
+}
+
+/* joins buffer to line, handles newline placement
+ * returns 0 if malloc fails, 1 on success */
+static int	process_buffer(char **line, char *buffer, char *nl_char)
+{
+	char	*temp;
+
+	temp = join_lnb(line, buffer, nl_char);
+	if (!temp)
+	{
+		cleanup_line(line, buffer);
+		return (0);
+	}
+	*line = temp;
+	if (nl_char)
+		ft_strcpy(buffer, nl_char + 1);
+	return (1);
+}
+
+/* reads from fd into buffer, null-terminates it
+ * returns num of bytes read (0 = EOF, -1 = error) */
 static int	handle_read(char *buffer, int fd)
 {
 	int	bytes_read;
@@ -23,6 +52,8 @@ static int	handle_read(char *buffer, int fd)
 	return (bytes_read);
 }
 
+/* main loop - keeps reading & building line until newline or EOF
+ * handles malloc failures & read errors by cleaning up */
 static void	read_loop(char *buffer, char **line, int fd)
 {
 	int		bytes_read;
@@ -31,27 +62,23 @@ static void	read_loop(char *buffer, char **line, int fd)
 	while (1)
 	{
 		nl_char = ft_strchr(buffer, '\n');
-		*line = join_lnb(line, buffer, nl_char);
-		if (nl_char)
-			ft_strcpy(buffer, nl_char + 1);
+		if (!process_buffer(line, buffer, nl_char))
+			return ;
 		if (nl_char)
 			break ;
 		bytes_read = handle_read(buffer, fd);
 		if (bytes_read == 0)
 			break ;
-		else if (bytes_read < 0)
+		if (bytes_read < 0)
 		{
-			if (*line)
-			{
-				free(*line);
-				*line = NULL;
-			}
-			buffer[0] = 0;
+			cleanup_line(line, buffer);
 			return ;
 		}
 	}
 }
 
+/* returns next line from fd, or NULL if done/error
+ * uses static buffer to remember leftover data between calls */
 char	*get_next_line(int fd)
 {
 	static char	buffer[BUFFER_SIZE + 1];
